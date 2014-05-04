@@ -1,5 +1,11 @@
 jQuery(document).ready(function($) { 
 	/**
+	 * Put the key into the lock
+	 * This will do for bot which doesn't use js
+	 */
+	$('#ts-lock').val( testimonials_submission_params.key );
+
+	/**
 	* Testimonial submission handler
 	*/
 	$('#submit-testimonial').submit(function(e){

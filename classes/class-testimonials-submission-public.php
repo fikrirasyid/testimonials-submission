@@ -28,6 +28,12 @@ class Testimonials_Submission_Public{
 	 */
 	function enqueue(){
 		wp_enqueue_script( 'testimonials_submission', TESTIMONIALS_SUBMISSION_PLUGIN_URL . 'assets/js/testimonials-submission.js', array('jquery'), '1.0', true );
+
+		// Add params
+		$testimonials_submission_params = array(
+			'key' => wp_create_nonce( 'testimonials_submission_invisible_value' )
+		);
+		wp_localize_script( 'testimonials_submission', 'testimonials_submission_params', $testimonials_submission_params );
 	}
 
 	/**
@@ -207,6 +213,9 @@ class Testimonials_Submission_Public{
 		wp_nonce_field( 'testimonial_submission_nonce', '_n' );
 
 		$form .= ob_get_clean();
+
+		// The spam prevention lock
+		$form .= "<input type='hidden' name='ts_lock' id='ts-lock' value='' />";
 
 		// Submit Copy
 		$submit_copy = __( 'Submit Testimony', 'testimonials_submission' );

@@ -159,6 +159,19 @@ class Testimonials_Submission{
 		if( $is_ajax )
 			$ajax_response = array();
 
+		// Verify bot
+		if( !isset( $_POST['ts_lock'] ) || !wp_verify_nonce( $_POST['ts_lock'], 'testimonials_submission_invisible_value' ) ){
+			$error_code = 'not-human';
+
+			if( $is_ajax ){
+				$ajax_response['error'][$error_code]['id'] 		= "ts-message";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
+			} else {
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
+				die();
+			}
+		}
+
 		// Verify nonce
 		if( !isset( $_POST['_n'] ) || !wp_verify_nonce( $_POST['_n'], 'testimonial_submission_nonce' ) ){
 			$error_code = 'unauthorized';

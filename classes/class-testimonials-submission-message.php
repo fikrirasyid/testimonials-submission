@@ -9,6 +9,7 @@ class Testimonials_Submission_Message{
 	 */
 	function messages(){
 		$messages = array(
+			'not-human'		=> __( 'Submission cancelled. You are detected as spam or bot.', 'testimonials_submission' ),
 			'unauthorized' 	=> __( 'Your request cannot be authorized. Refresh your browser and try again.', 'testimonials_submission' ),
 			'empty-message' => __( 'Name field cannot be empty.', 'testimonials_submission' ),
 			'empty-email'	=> __( 'Email field cannot be empty.', 'testimonials_submission' ),
