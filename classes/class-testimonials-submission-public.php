@@ -63,10 +63,10 @@ class Testimonials_Submission_Public{
 			array(
 				'id' 			=> 'role',
 				'input_type'	=> 'text',
-				'label'			=> 'Role',
+				'label'			=> 'About Yourself',
 				'required'		=> false,
 				'description' 	=> __( 'Explain yourself briefly here', 'testimonials_submission' ),
-				'placeholder'	=> __( 'Happy Customer', 'testimonials_submission' )
+				'placeholder'	=> __( 'Happy Customer from Bandung Since 2008', 'testimonials_submission' )
 			),
 			array(
 				'id' 			=> 'url',
