@@ -210,7 +210,7 @@ class Testimonials_Submission_Public{
 		// create nonce
 		ob_start();
 
-		wp_nonce_field( 'testimonial_submission_nonce', '_n' );
+		wp_nonce_field( 'testimonials_submission_nonce', '_n' );
 
 		$form .= ob_get_clean();
 

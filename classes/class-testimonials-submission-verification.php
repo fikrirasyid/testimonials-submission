@@ -76,7 +76,7 @@ class Testimonials_Submission_Verification{
 
 		if( !$verification ){
 			?>
-				<p><?php _e( 'We cannot find any testimonial which matches with your verification id. <br> You are probably clicking the wrong link.', 'testimonial_submission' ); ?></p>
+				<p><?php _e( 'We cannot find any testimonial which matches with your verification id. <br> You are probably clicking the wrong link.', 'testimonials_submission' ); ?></p>
 			<?php
 		} else {
 			// display message
@@ -97,8 +97,8 @@ class Testimonials_Submission_Verification{
 				}
 
 				?>
-					<p style="margin-bottom: 20px;"><?php printf( __( 'Hi %s,', 'testimonial_submission' ), $testimonial['name']); ?></p>
-					<p><?php _e( 'Your testimonial below has been verified:', 'testimonial_submission' ); ?></p>
+					<p style="margin-bottom: 20px;"><?php printf( __( 'Hi %s,', 'testimonials_submission' ), $testimonial['name']); ?></p>
+					<p><?php _e( 'Your testimonial below has been verified:', 'testimonials_submission' ); ?></p>
 
 					<blockquote style="margin:60px 0; padding: 30px 20px; font-weight: lighter; font-size: 1.4em; border-top: 1px solid #cfcfcf; border-bottom: 1px solid #cfcfcf;">
 						<?php echo wpautop( $testimonial['content'] ); ?>
@@ -119,13 +119,13 @@ class Testimonials_Submission_Verification{
 
 					</blockquote>	
 
-					<p style="margin-bottom: 20px;"><?php _e( 'Your testimonial have been added as draft and not published yet.  We have notified administrator that there is new <em>incoming</em> verified testimonial from you.', 'testimonial_submission' ); ?></p>
-					<p><?php _e( 'Thank you for your testimonial.', 'testimonial_submission' ); ?></p>
+					<p style="margin-bottom: 20px;"><?php _e( 'Your testimonial have been added as draft and not published yet.  We have notified administrator that there is new <em>incoming</em> verified testimonial from you.', 'testimonials_submission' ); ?></p>
+					<p><?php _e( 'Thank you for your testimonial.', 'testimonials_submission' ); ?></p>
 				<?php
 			else :
 				?>
-					<p style="margin-bottom: 20px;"><?php printf( __( 'Hi %s,', 'testimonial_submission' ), $testimonial['name']); ?></p>
-					<p><?php _e( 'You have verified your testimonial before.', 'testimonial_submission' ); ?></p>
+					<p style="margin-bottom: 20px;"><?php printf( __( 'Hi %s,', 'testimonials_submission' ), $testimonial['name']); ?></p>
+					<p><?php _e( 'You have verified your testimonial before.', 'testimonials_submission' ); ?></p>
 				<?php
 			endif;
 		}
@@ -153,9 +153,9 @@ class Testimonials_Submission_Verification{
 	 */
 	function send_notification_email( $post_id, $post_title ){
 		$to 		= get_bloginfo( 'admin_email' );
-		$subject 	= sprintf( __( 'New verified testimonial by %s', 'testimonial_submission' ), $post_title );
+		$subject 	= sprintf( __( 'New verified testimonial by %s', 'testimonials_submission' ), $post_title );
 		$link 		= admin_url( "post.php?post=$post_id&action=edit" );
-		$message 	= sprintf( __( '<p>Dear admin,</p><p>New verified testimonial has been submitted by %s as a draft right now. <a href="%s" target="_blank">Click here to check the testimonial</a>.</p>', 'testimonial_submission' ), $post_title, $link );
+		$message 	= sprintf( __( '<p>Dear admin,</p><p>New verified testimonial has been submitted by %s as a draft right now. <a href="%s" target="_blank">Click here to check the testimonial</a>.</p>', 'testimonials_submission' ), $post_title, $link );
 
 		// Send the email
 		$sending = wp_mail( $to, $subject, $message );
@@ -181,7 +181,7 @@ class Testimonials_Submission_Verification{
 		// Display verification message, wrapped by themes header and footer
 		get_header();
 
-		do_action( 'before_testimonial_submission_verification_page' );
+		do_action( 'before_testimonials_submission_verification_page' );
 
 		?>
 			<div id="verification-wrap" style="display: block; width: 90%; max-width: 640px; margin: 0 auto; padding: 80px 0; text-align: center;">
@@ -190,7 +190,7 @@ class Testimonials_Submission_Verification{
 				</div>
 			</div>
 		<?php
-		do_action( 'after_testimonial_submission_verification_page' );
+		do_action( 'after_testimonials_submission_verification_page' );
 
 		get_footer();
 

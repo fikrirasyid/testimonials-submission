@@ -111,8 +111,8 @@ class Testimonials_Submission{
 		$to 	= get_post_meta( $post_id, '_gravatar_email', true );
 		$verification_id = get_post_meta( $post_id, '_verification_id', true );
 		$link 	= admin_url() . 'admin-ajax.php?action=testimonials_submission_verification&id=' . $verification_id;
-		$subject = get_bloginfo( 'name' ) . __( ' Testimony Identity Verification', 'testimonial_submission' );
-		$message = sprintf( __( apply_filters( 'testimonial_submission_verification_message', '<p>Hi %s,</p><p>Thank you for sending us your testimony! To publish your testimony, we have to verify your identity first. To do so, <a href="%s" title="Verify your identity" target="_blank">please click this link</a>.</p> <p>Thank you.</p>' ), 'testimonial_submission' ), $name, $link );
+		$subject = get_bloginfo( 'name' ) . __( ' Testimony Identity Verification', 'testimonials_submission' );
+		$message = sprintf( __( apply_filters( 'testimonials_submission_verification_message', '<p>Hi %s,</p><p>Thank you for sending us your testimony! To publish your testimony, we have to verify your identity first. To do so, <a href="%s" title="Verify your identity" target="_blank">please click this link</a>.</p> <p>Thank you.</p>' ), 'testimonials_submission' ), $name, $link );
 
 		// Send the mail
 		$sending = wp_mail( $to, $subject, $message );
@@ -173,7 +173,7 @@ class Testimonials_Submission{
 		}
 
 		// Verify nonce
-		if( !isset( $_POST['_n'] ) || !wp_verify_nonce( $_POST['_n'], 'testimonial_submission_nonce' ) ){
+		if( !isset( $_POST['_n'] ) || !wp_verify_nonce( $_POST['_n'], 'testimonials_submission_nonce' ) ){
 			$error_code = 'unauthorized';
 
 			if( $is_ajax ){
