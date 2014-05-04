@@ -79,7 +79,7 @@ class Testimonials_Submission_Public{
 			array(
 				'id' 			=> 'testimonial',
 				'input_type'	=> 'textarea',
-				'label'			=> 'Testimony',
+				'label'			=> 'Testimonial',
 				'required'		=> true,
 				'description' 	=> __( 'Tell us your experience', 'testimonials_submission' ),
 				'placeholder'	=> __( 'I will definitely recommend you guys to my friends and family :D', 'testimonials_submission' )
@@ -218,7 +218,7 @@ class Testimonials_Submission_Public{
 		$form .= "<input type='hidden' name='ts_lock' id='ts-lock' value='' />";
 
 		// Submit Copy
-		$submit_copy = __( 'Submit Testimony', 'testimonials_submission' );
+		$submit_copy = __( 'Submit Testimonial', 'testimonials_submission' );
 
 		$form .= "<input type='submit' class='button' value='$submit_copy' />";
 
