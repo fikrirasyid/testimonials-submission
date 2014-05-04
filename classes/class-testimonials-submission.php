@@ -25,7 +25,7 @@ class Testimonials_Submission{
 	 * 
 	 * @return obj|bool
 	 */
-	function get_testimony( $column = 'post_title', $value = '' ){
+	function get_testimonial( $column = 'post_title', $value = '' ){
 		global $wpdb;
 
 		$query = $wpdb->prepare("SELECT * FROM {$wpdb->posts} WHERE $column = %s ORDER BY post_date DESC", $value );
@@ -43,7 +43,7 @@ class Testimonials_Submission{
 	 * @return bool true if this has been submitted before, false if this should be submitted
 	 */
 	function verify_repetition( $post_title = '' ){
-		$posted = $this->get_testimony( 'post_title', $post_title );
+		$posted = $this->get_testimonial( 'post_title', $post_title );
 
 		if( isset( $posted->post_date ) ){
 			$timestamp 		= strtotime( $posted->post_date );
@@ -148,8 +148,8 @@ class Testimonials_Submission{
 		}
 
 		// Testimony cannot be empty
-		if( !isset( $_POST['ts_testimony'] ) || empty( $_POST['ts_testimony'] ) ){
-			$error_message = 'empty-testimony';
+		if( !isset( $_POST['ts_testimonial'] ) || empty( $_POST['ts_testimonial'] ) ){
+			$error_message = 'empty-testimonial';
 
 			if( $is_ajax ){
 
@@ -184,12 +184,12 @@ class Testimonials_Submission{
 			}
 		}
 
-		// If testimony passes all validation, insert it into database
+		// If testimonial passes all validation, insert it into database
 		$post_id = wp_insert_post( array(
 			'post_status'	=> 'trash',
 			'post_type'		=> 'testimonial',
 			'post_title'	=> sanitize_text_field( $_POST['ts_name'] ),
-			'post_content'	=> sanitize_text_field( $_POST['ts_testimony'] ),
+			'post_content'	=> sanitize_text_field( $_POST['ts_testimonial'] ),
 		) );
 
 		// Saves email

@@ -53,7 +53,7 @@ class Testimonials_Submission_Public{
 				'placeholder'	=> __( 'http://yoursite.com', 'testimonials_submission' )
 			),
 			array(
-				'id' 			=> 'testimony',
+				'id' 			=> 'testimonial',
 				'input_type'	=> 'textarea',
 				'label'			=> 'Testimony',
 				'required'		=> true,
@@ -91,7 +91,7 @@ class Testimonials_Submission_Public{
 					$message = __( 'Email field cannot be empty.', 'testimonials_submission' );
 					break;
 
-				case 'empty-testimony':
+				case 'empty-testimonial':
 					$message = __( 'Testimony field cannot be empty.', 'testimonials_submission' );
 					break;
 
@@ -100,11 +100,11 @@ class Testimonials_Submission_Public{
 					break;
 
 				case 'slow-down':
-					$message = __( 'Slow down, you can stop clicking submit testimony button. We already have received your testimony a moment ago.', 'testimonials_submission' );
+					$message = __( 'Slow down, you can stop clicking submit testimonial button. We already have received your testimonial a moment ago.', 'testimonials_submission' );
 					break;
 
 				case 'success':
-					$message = __( 'We have received your testimony. Please check your email and follow further instruction to verify your identity.', 'testimonials_submission' );
+					$message = __( 'We have received your testimonial. Please check your email and follow further instruction to verify your identity.', 'testimonials_submission' );
 					$classes = 'ts-message success';
 					$style = 'background: green; padding: 3px 15px; display: block; font-size: 14px; margin-bottom: 30px; color: white;';
 					break;
@@ -151,7 +151,7 @@ class Testimonials_Submission_Public{
 		$action = admin_url() . 'admin-ajax.php?action=testimonials_submission';
 
 		// Form
-		$form = "<form action='$action' id='submit-testimonials' method='POST'>";
+		$form = "<form action='$action' id='submit-testimonial' method='POST'>";
 
 		// Notification, if there's any
 		$form .= $this->get_message();
