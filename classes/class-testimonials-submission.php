@@ -20,6 +20,8 @@ class Testimonials_Submission{
 
 		add_action( 'wp_ajax_testimonials_submission', array( $this, 'endpoint' ) );
 		add_action( 'wp_ajax_nopriv_testimonials_submission', array( $this, 'endpoint' ) );
+
+		add_filter( 'wp_mail_content_type', array( $this, 'modify_content_type') );
 	}
 
 	/**
@@ -78,6 +80,44 @@ class Testimonials_Submission{
 		$exploded_url = explode( "?", $url );
 
 		return $exploded_url[0];
+	}
+
+	/**
+	 * Modify the email format into HTML mail
+	 * 
+	 * @return string email content type
+	 */
+	function modify_content_type( $content_type ){
+		if( isset( $_GET['action'] ) && $_GET['action'] == 'testimonials_submission' ){
+			return 'text/html';
+		} else {
+			return $content_type;
+		}
+	}
+
+	/**
+	 * Send verification email
+	 * 
+	 * @author Fikri Rasyid
+	 * 
+	 * @return void
+	 */
+	function send_verification_email( $post_id ){
+		$post = get_post( $post_id );
+		if( !$post )
+			return;
+
+		$name 	= $post->post_title;
+		$email 	= get_post_meta( $post_id, '_gravatar_email', true );
+		$verification_id = get_post_meta( $post_id, '_verification_id', true );
+		$link 	= admin_url() . 'admin-ajax.php?action=testimonial_submission_verification&id=' . $verification_id;
+		$subject = get_bloginfo( 'name' ) . __( ' Testimony Identity Verification', 'testimonial_submission' );
+		$message = sprintf( __( apply_filters( 'testimonial_submission_verification_message', '<p>Hi %s,</p><p>Thank you for sending us your testimony! To publish your testimony, we have to verify your identity first. To do so, <a href="%s" title="Verify your identity" target="_blank">please click this link</a>.</p> <p>Thank you.</p>' ), 'testimonial_submission' ), $name, $link );
+
+		// Send the mail
+		$sending = wp_mail( $email, $subject, $message );
+
+		return $sending;
 	}
 
 	/**
@@ -223,6 +263,13 @@ class Testimonials_Submission{
 		// Saves url
 		if( $post_id && isset( $_POST['ts_url'] ) && !empty( $_POST['ts_url'] ) )
 			update_post_meta( $post_id, '_url', $_POST['ts_url'] );
+
+		// Saves verification ID
+		$verification_id = md5( "verify_{$_POST['ts_name']}_{$_POST['ts_email']}_{$post_id}" );
+			update_post_meta( $post_id, '_verification_id', $verification_id );
+
+		// Sending verification email
+		$this->send_verification_email( $post_id );
 
 		// Succeeded!
 		if( $is_ajax ){
