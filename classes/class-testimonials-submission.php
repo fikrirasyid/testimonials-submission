@@ -13,7 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
  * @since 1.0.0
  */
 class Testimonials_Submission{
+	var $messages;
+
 	function __construct(){
+		$this->messages = new Testimonials_Submission_Message;
+
 		add_action( 'wp_ajax_testimonials_submission', array( $this, 'endpoint' ) );
 		add_action( 'wp_ajax_nopriv_testimonials_submission', array( $this, 'endpoint' ) );
 	}
@@ -111,62 +115,71 @@ class Testimonials_Submission{
 		if( !isset( $_POST ) || empty( $_POST ) )
 			wp_redirect( $redirect );
 
+		// Prepare Ajax Response
+		if( $is_ajax )
+			$ajax_response = array();
+
 		// Verify nonce
 		if( !isset( $_POST['_n'] ) || !wp_verify_nonce( $_POST['_n'], 'testimonial_submission_nonce' ) ){
-			$error_message = 'unauthorized';
+			$error_code = 'unauthorized';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-message";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
 		}
 
 		// Name cannot be empty
 		if( !isset( $_POST['ts_name'] ) || empty( $_POST['ts_name'] ) ){
-			$error_message = 'empty-name';
+			$error_code = 'empty-name';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-name";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
 		}
 
 		// Email cannot be empty
 		if( !isset( $_POST['ts_email'] ) || empty( $_POST['ts_email'] ) ){
-			$error_message = 'empty-email';
+			$error_code = 'empty-email';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-email";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
 		}
 
 		// Testimony cannot be empty
 		if( !isset( $_POST['ts_testimonial'] ) || empty( $_POST['ts_testimonial'] ) ){
-			$error_message = 'empty-testimonial';
+			$error_code = 'empty-testimonial';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-testimonial";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
 		}
 
 		// Email should be validated
 		if( !isset( $_POST['ts_email'] ) || !filter_var( $_POST['ts_email'], FILTER_VALIDATE_EMAIL ) ){
-			$error_message = 'invalid-email';
+			$error_code = 'invalid-email';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-email";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
 		}	
@@ -174,14 +187,21 @@ class Testimonials_Submission{
 		// Check for repetition / if this has been entered before
 		$repetition = $this->verify_repetition( $_POST['ts_name'] );
 		if( $repetition ){
-			$error_message = 'slow-down';
+			$error_code = 'slow-down';
 
 			if( $is_ajax ){
-
+				$ajax_response['error'][$error_code]['id'] 		= "ts-message";
+				$ajax_response['error'][$error_code]['message'] = $this->messages->get_message( $error_code );
 			} else {
-				wp_redirect( "{$redirect}?response={$error_message}&{$filled_fields}" );
+				wp_redirect( "{$redirect}?response={$error_code}&{$filled_fields}" );
 				die();
 			}
+		}
+
+		// Error response for ajax request
+		if( $is_ajax && isset( $ajax_response['error'] ) ){
+			echo json_encode( $ajax_response );
+			die();
 		}
 
 		// If testimonial passes all validation, insert it into database
@@ -206,9 +226,11 @@ class Testimonials_Submission{
 
 		// Succeeded!
 		if( $is_ajax ){
-
+			$ajax_response['success']['id'] 		= "ts-message";			
+			$ajax_response['success']['message']	= $this->messages->get_message( 'success' );
+			echo json_encode( $ajax_response );
 		} else {
-			wp_redirect( "{$redirect}?response=success&{$filled_fields}" );
+			wp_redirect( "{$redirect}?response=success" );
 		}
 
 		die();

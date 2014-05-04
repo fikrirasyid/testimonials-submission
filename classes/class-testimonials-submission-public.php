@@ -13,12 +13,30 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
  * @since 1.0.0
  */
 class Testimonials_Submission_Public{
+	var $messages;
+
+	function __construct(){
+		$this->messages = new Testimonials_Submission_Message;
+	}
+
+	/**
+	 * Enqueue scripts and style for js-based UX
+	 * 
+	 * @author Fikri Rasyid
+	 * 
+	 * @return void
+	 */
+	function enqueue(){
+		wp_enqueue_script( 'testimonials_submission', TESTIMONIALS_SUBMISSION_PLUGIN_URL . 'assets/js/testimonials-submission.js', array('jquery'), '1.0', true );
+	}
 
 	/**
 	 * Define form fields and its validation mechanism. Pluggable by filters
 	 * @return arr
 	 */
 	function form_fields(){
+		$this->enqueue();
+
 		$fields = array(
 			array(
 				'id' 			=> 'name',
@@ -72,49 +90,25 @@ class Testimonials_Submission_Public{
 	 * 
 	 * @return string
 	 */
-	function get_message(){
+	function get_form_message(){
 		if( isset( $_GET['response'] ) ){
 			$code = $_GET['response'];
 			$classes = 'ts-message error';
 			$style = 'background: red; padding: 3px 15px; display: block; font-size: 14px; margin-bottom: 30px; color: white;';
 
 			switch ( $code ) {
-				case 'unauthorized':
-					$message = __( 'Your request cannot be authorized. Refresh your browser and try again.', 'testimonials_submission' );
-					break;
-
-				case 'empty-name':
-					$message = __( 'Name field cannot be empty.', 'testimonials_submission' );
-					break;
-
-				case 'empty-email':
-					$message = __( 'Email field cannot be empty.', 'testimonials_submission' );
-					break;
-
-				case 'empty-testimonial':
-					$message = __( 'Testimony field cannot be empty.', 'testimonials_submission' );
-					break;
-
-				case 'invalid-email':
-					$message = __( 'Please use your actual email.', 'testimonials_submission' );
-					break;
-
-				case 'slow-down':
-					$message = __( 'Slow down, you can stop clicking submit testimonial button. We already have received your testimonial a moment ago.', 'testimonials_submission' );
-					break;
-
 				case 'success':
-					$message = __( 'We have received your testimonial. Please check your email and follow further instruction to verify your identity.', 'testimonials_submission' );
+					$message = $this->messages->get_message( $code );
 					$classes = 'ts-message success';
 					$style = 'background: green; padding: 3px 15px; display: block; font-size: 14px; margin-bottom: 30px; color: white;';
 					break;
 
 				default:
-					$message = __( 'Something is wrong. Please try again later.', 'testimonials_submission' );
+					$message = $this->messages->get_message( $code );
 					break;
 			}
 
-			return "<div class='$classes' style='$style'>$message</div>";
+			return "<div id='ts-message' class='$classes' style='$style'>$message</div>";
 		} else {
 			return '';
 		}
@@ -151,10 +145,13 @@ class Testimonials_Submission_Public{
 		$action = admin_url() . 'admin-ajax.php?action=testimonials_submission';
 
 		// Form
-		$form = "<form action='$action' id='submit-testimonial' method='POST'>";
+		$form = "<form action='$action' id='submit-testimonial' method='POST' style='position: relative;'>";
+
+		// Blocking UI
+		$form .= "<span id='submit-testimonial-block' style='position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: white; opacity: .8; display: none;'></span>";
 
 		// Notification, if there's any
-		$form .= $this->get_message();
+		$form .= $this->get_form_message();
 
 		// Build the form
 		foreach ($fields as $field) {
@@ -168,13 +165,13 @@ class Testimonials_Submission_Public{
 
 			// Build the form
 			$form .= "<p>";
-			$form .= "<label>$label";
+			$form .= "<label for='ts-$id'>$label";
 
 			if( $required ){
 				$form .= "<span class='required'>*</span>";
 			}
 
-			$form .= "</label>";
+			$form .= "<span id='ts-$id-message' style='font-size: 11px; color: red; font-weight: bold;'></span></label>";
 
 			// Get submitted value
 			$value = $this->get_field_value('ts_' . $id );
@@ -217,6 +214,11 @@ class Testimonials_Submission_Public{
 		$form .= "<input type='submit' class='button' value='$submit_copy' />";
 
 		$form .= '</form>';		
+
+		// Loading State
+		$loading_copy = __( 'Submitting Testimonial...', 'testimonials_submission' );
+		$loading_img = admin_url() . 'images/wpspin_light-2x.gif';
+		$form .= "<div id='submit-testimonial-loading' style='display: none; padding: 35px 0 0; border: 1px dashed #cfcfcf; margin-top: 35px;'><p style='text-align: center; margin-bottom: 0;'><img src='$loading_img' title='loading...'></p><p style='text-align: center;'>$loading_copy</p></div>";
 
 		return $form;
 	}
