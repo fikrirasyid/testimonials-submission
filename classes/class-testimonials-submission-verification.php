@@ -5,6 +5,8 @@ class Testimonials_Submission_Verification{
 	function __construct(){
 		add_action( 'wp_ajax_testimonials_submission_verification', array( $this, 'render_page' ) );
 		add_action( 'wp_ajax_nopriv_testimonials_submission_verification', array( $this, 'render_page' ) );
+
+		add_filter( 'wp_mail_content_type', array( $this, 'modify_content_type') );
 	}
 
 	/**
@@ -89,6 +91,11 @@ class Testimonials_Submission_Verification{
 					'post_status'	=> 'draft'
 				));
 
+				// Send notification to admin
+				if( $update ){
+					$this->send_notification_email( $verification, $testimonial['name'] );
+				}
+
 				?>
 					<p style="margin-bottom: 20px;"><?php printf( __( 'Hi %s,', 'testimonial_submission' ), $testimonial['name']); ?></p>
 					<p><?php _e( 'Your testimonial below has been verified:', 'testimonial_submission' ); ?></p>
@@ -122,6 +129,38 @@ class Testimonials_Submission_Verification{
 				<?php
 			endif;
 		}
+	}
+
+	/**
+	 * Modify the email format into HTML mail
+	 * 
+	 * @return string email content type
+	 */
+	function modify_content_type( $content_type ){
+		if( isset( $_GET['action'] ) && $_GET['action'] == 'testimonials_submission_verification' ){
+			return 'text/html';
+		} else {
+			return $content_type;
+		}
+	}	
+
+	/**
+	 * Send notification email which tells admin that there is new testimonial submitted
+	 * 
+	 * @author Fikri Rasyid
+	 * 
+	 * @return void
+	 */
+	function send_notification_email( $post_id, $post_title ){
+		$to 		= get_bloginfo( 'admin_email' );
+		$subject 	= sprintf( __( 'New verified testimonial by %s', 'testimonial_submission' ), $post_title );
+		$link 		= admin_url( "post.php?post=$post_id&action=edit" );
+		$message 	= sprintf( __( '<p>Dear admin,</p><p>New verified testimonial has been submitted by %s as a draft right now. <a href="%s" target="_blank">Click here to check the testimonial</a>.</p>', 'testimonial_submission' ), $post_title, $link );
+
+		// Send the email
+		$sending = wp_mail( $to, $subject, $message );
+
+		return $sending;
 	}
 
 	/**

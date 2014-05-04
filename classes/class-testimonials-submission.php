@@ -108,14 +108,14 @@ class Testimonials_Submission{
 			return;
 
 		$name 	= $post->post_title;
-		$email 	= get_post_meta( $post_id, '_gravatar_email', true );
+		$to 	= get_post_meta( $post_id, '_gravatar_email', true );
 		$verification_id = get_post_meta( $post_id, '_verification_id', true );
 		$link 	= admin_url() . 'admin-ajax.php?action=testimonials_submission_verification&id=' . $verification_id;
 		$subject = get_bloginfo( 'name' ) . __( ' Testimony Identity Verification', 'testimonial_submission' );
 		$message = sprintf( __( apply_filters( 'testimonial_submission_verification_message', '<p>Hi %s,</p><p>Thank you for sending us your testimony! To publish your testimony, we have to verify your identity first. To do so, <a href="%s" title="Verify your identity" target="_blank">please click this link</a>.</p> <p>Thank you.</p>' ), 'testimonial_submission' ), $name, $link );
 
 		// Send the mail
-		$sending = wp_mail( $email, $subject, $message );
+		$sending = wp_mail( $to, $subject, $message );
 
 		return $sending;
 	}
