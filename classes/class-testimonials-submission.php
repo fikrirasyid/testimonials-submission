@@ -110,7 +110,7 @@ class Testimonials_Submission{
 		$name 	= $post->post_title;
 		$email 	= get_post_meta( $post_id, '_gravatar_email', true );
 		$verification_id = get_post_meta( $post_id, '_verification_id', true );
-		$link 	= admin_url() . 'admin-ajax.php?action=testimonial_submission_verification&id=' . $verification_id;
+		$link 	= admin_url() . 'admin-ajax.php?action=testimonials_submission_verification&id=' . $verification_id;
 		$subject = get_bloginfo( 'name' ) . __( ' Testimony Identity Verification', 'testimonial_submission' );
 		$message = sprintf( __( apply_filters( 'testimonial_submission_verification_message', '<p>Hi %s,</p><p>Thank you for sending us your testimony! To publish your testimony, we have to verify your identity first. To do so, <a href="%s" title="Verify your identity" target="_blank">please click this link</a>.</p> <p>Thank you.</p>' ), 'testimonial_submission' ), $name, $link );
 
@@ -246,7 +246,7 @@ class Testimonials_Submission{
 
 		// If testimonial passes all validation, insert it into database
 		$post_id = wp_insert_post( array(
-			'post_status'	=> 'trash',
+			'post_status'	=> 'submission',
 			'post_type'		=> 'testimonial',
 			'post_title'	=> sanitize_text_field( $_POST['ts_name'] ),
 			'post_content'	=> sanitize_text_field( $_POST['ts_testimonial'] ),

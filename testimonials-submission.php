@@ -18,4 +18,5 @@ if (!defined('TESTIMONIALS_SUBMISSION_PLUGIN_URL'))
 require_once( 'classes/class-testimonials-submission-message.php' );
 require_once( 'classes/class-testimonials-submission.php' );
 require_once( 'classes/class-testimonials-submission-public.php' );;
+require_once( 'classes/class-testimonials-submission-verification.php' );
 require_once( 'testimonials-submission-template.php' );
