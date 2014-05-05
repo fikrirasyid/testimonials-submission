@@ -1,15 +1,15 @@
 jQuery(document).ready(function($) { 
 	/**
-	 * Put the key into the lock
-	 * This will do for bot which doesn't use js
-	 */
-	$('#ts-lock').val( testimonials_submission_params.key );
-
-	/**
 	* Testimonial submission handler
 	*/
-	$('#submit-testimonial').submit(function(e){
+	$('body').on('submit', '#submit-testimonial', function(e){
 		e.preventDefault();
+
+		/**
+		 * Put the key into the lock
+		 * This will do for bot which doesn't use js
+		 */
+		$('#ts-lock').val( testimonials_submission_params.key );
 
 		// Remove previously added state
 		$('#submit-testimonial input, #submit-testimonial textarea').removeAttr('style');
