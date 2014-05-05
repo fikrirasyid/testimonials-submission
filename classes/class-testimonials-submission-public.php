@@ -20,29 +20,10 @@ class Testimonials_Submission_Public{
 	}
 
 	/**
-	 * Enqueue scripts and style for js-based UX
-	 * 
-	 * @author Fikri Rasyid
-	 * 
-	 * @return void
-	 */
-	function enqueue(){
-		wp_enqueue_script( 'testimonials_submission', TESTIMONIALS_SUBMISSION_PLUGIN_URL . 'assets/js/testimonials-submission.js', array('jquery'), '1.0', true );
-
-		// Add params
-		$testimonials_submission_params = array(
-			'key' => wp_create_nonce( 'testimonials_submission_invisible_value' )
-		);
-		wp_localize_script( 'testimonials_submission', 'testimonials_submission_params', $testimonials_submission_params );
-	}
-
-	/**
 	 * Define form fields and its validation mechanism. Pluggable by filters
 	 * @return arr
 	 */
 	function form_fields(){
-		$this->enqueue();
-
 		$fields = array(
 			array(
 				'id' 			=> 'name',
