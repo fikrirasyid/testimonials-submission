@@ -22,6 +22,23 @@ class Testimonials_Submission{
 		add_action( 'wp_ajax_nopriv_testimonials_submission', array( $this, 'endpoint' ) );
 
 		add_filter( 'wp_mail_content_type', array( $this, 'modify_content_type') );
+
+		add_action( 'init', array( $this, 'register_post_status' ) );
+	}
+
+	/**
+	 * Register post status "submission"
+	 * 
+	 * @author Fikri Rasyid
+	 * 
+	 * @return void
+	 */
+	function register_post_status(){
+		register_post_status( 'submission', array(
+			'label'       => _x( 'Submission', 'post' ),
+			'label_count' => _n_noop( 'Submission <span class="count">(%s)</span>', 'Submission <span class="count">(%s)</span>' ),
+			'show_in_admin_status_list' => true,
+		) );
 	}
 
 	/**
