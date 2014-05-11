@@ -108,8 +108,10 @@ class Testimonials_Submission_Public{
 	 * 
 	 * @return string
 	 */
-	function get_field_value( $name = '' ){
-		if( isset( $_GET[$name] ) && isset( $_GET['response'] ) && $_GET[$name] != '' && $_GET['response'] != 'success' ){
+	function get_field_value( $name = '', $value = false ){
+		if( isset( $value ) ){
+			return $value;
+		} elseif( isset( $_GET[$name] ) && isset( $_GET['response'] ) && $_GET[$name] != '' && $_GET['response'] != 'success' ){
 			return $_GET[$name];
 		} else {
 			return '';
@@ -123,8 +125,7 @@ class Testimonials_Submission_Public{
 	 * 
 	 * @return string
 	 */
-	function get_form(){
-
+	function get_form( $args = array() ){
 		// Define form fields
 		$fields = $this->form_fields();
 
@@ -161,7 +162,12 @@ class Testimonials_Submission_Public{
 			$form .= "<span id='ts-$id-message' style='font-size: 11px; color: red; font-weight: bold;'></span></label>";
 
 			// Get submitted value
-			$value = $this->get_field_value('ts_' . $id );
+			if( isset( $args['value_' . $id] ) ){
+				$args_value = $args['value_' . $id];
+			} else {
+				$args_value = false;
+			}
+			$value = $this->get_field_value('ts_' . $id, $args_value );
 
 			// Print input
 			switch ( $input_type ) {

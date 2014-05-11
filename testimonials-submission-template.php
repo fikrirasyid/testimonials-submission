@@ -28,9 +28,9 @@ add_action( 'wp_enqueue_scripts', 'testimonials_submission_scripts' );
  * 
  * @return string
  */
-function get_testimonials_submission(){
+function get_testimonials_submission( $args = array() ){
 	$testimonials_submission = new Testimonials_Submission_Public();
-	$form = $testimonials_submission->get_form();
+	$form = $testimonials_submission->get_form( $args );
 
 	return $form;	
 }
@@ -42,8 +42,8 @@ function get_testimonials_submission(){
  * 
  * @return void
  */
-function testimonials_submission(){
-	echo get_testimonials_submission();
+function testimonials_submission( $args = array() ){
+	echo get_testimonials_submission( $args );
 }
 
 /**
@@ -53,8 +53,8 @@ function testimonials_submission(){
  * 
  * @return string
  */
-function testimonials_submission_shortcode(){
-	$form = get_testimonials_submission();
+function testimonials_submission_shortcode( $atts ){
+	$form = get_testimonials_submission( $atts );
 
 	return $form;
 }
