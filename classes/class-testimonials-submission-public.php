@@ -152,7 +152,7 @@ class Testimonials_Submission_Public{
 			extract( $field );
 
 			// Build the form
-			$form .= "<p>";
+			$form .= "<p class='ts-$id-wrap'>";
 			$form .= "<label for='ts-$id'>$label";
 
 			if( $required ){
